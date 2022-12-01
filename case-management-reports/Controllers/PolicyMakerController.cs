@@ -101,7 +101,7 @@ namespace case_management_reports.Controllers
                         statuscode = 500,
                         message = "Unexpected error"
                     };
-                    return StatusCode(500);
+                    return StatusCode(500, response);
                 }
 
                 _context.Policymaker.Add(policymaker);

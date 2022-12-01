@@ -104,11 +104,22 @@ namespace case_management_reports.Controllers
                         statuscode = 500,
                         message = "Unexpected error"
                     };
-                    return StatusCode(500);
+                    return StatusCode(500,response);
                 }
 
                 hospitalpolicy.CreatedDate = DateTime.Now;
                 hospitalpolicy.ModifiedDate = DateTime.Now;
+
+                var policymaker = _context.Policymaker.FindAsync(hospitalpolicy.PolicyMakerId);
+                if(policymaker == null)
+                {
+                    Response response = new()
+                    {
+                        statuscode = 404,
+                        message = "Invalid policy maker id"
+                    };
+                    return StatusCode(404,response);
+                }
 
                 _context.Hospitalpolicy.Add(hospitalpolicy);
                 await _context.SaveChangesAsync();
@@ -154,6 +165,17 @@ namespace case_management_reports.Controllers
                     };
                     return StatusCode(404, response);
                 }*/
+
+                var policymaker = _context.Policymaker.FindAsync(hospitalpolicy.PolicyMakerId);
+                if (policymaker == null)
+                {
+                    Response response = new()
+                    {
+                        statuscode = 404,
+                        message = "Invalid policy maker id"
+                    };
+                    return StatusCode(404, response);
+                }
 
                 hospitalpolicy.ModifiedDate = DateTime.Now;
 

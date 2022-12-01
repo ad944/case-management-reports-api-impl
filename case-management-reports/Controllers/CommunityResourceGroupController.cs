@@ -101,7 +101,7 @@ namespace case_management_reports.Controllers
                         statuscode = 500,
                         message = "Unexpected error"
                     };
-                    return StatusCode(500);
+                    return StatusCode(500,response);
                 }
                 communityresourcegroup.CreatedDate = DateTime.Now;
                 communityresourcegroup.ModifiedDate = DateTime.Now;
