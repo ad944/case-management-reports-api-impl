@@ -25,6 +25,19 @@ namespace case_management_reports.Controllers
                 List<Policymaker> policymakers = _context.Policymaker.ToList();
                 if (policymakers.Count > 0)
                 {
+                    foreach(Policymaker policymaker in policymakers)
+                    {
+                        List<Hospitalpolicy> hospitalpolicies = _context.Hospitalpolicy.Where(h => h.PolicyMakerId == policymaker.PolicyMakerId).ToList();
+                        if(hospitalpolicies.Count > 0)
+                        {
+                            foreach(Hospitalpolicy hospitalpolicy in hospitalpolicies)
+                            {
+                                hospitalpolicy.PolicyMaker = null;
+                            }
+                            policymaker.Hospitalpolicy = hospitalpolicies;
+                        }
+                        
+                    }
                     return policymakers;
                 }
                 else
@@ -64,7 +77,7 @@ namespace case_management_reports.Controllers
                     return StatusCode(500, response);
                 }
 
-                var policymaker = await _context.Policymaker.FindAsync(id);
+                var policymaker = _context.Policymaker.FirstOrDefault(p => p.PolicyMakerId == id);
 
                 if (policymaker == null)
                 {
@@ -74,6 +87,16 @@ namespace case_management_reports.Controllers
                         message = "No policy maker found for the provided policyMakerId"
                     };
                     return StatusCode(404, response);
+                }
+
+                List<Hospitalpolicy> hospitalpolicies = _context.Hospitalpolicy.Where(h => h.PolicyMakerId == policymaker.PolicyMakerId).ToList();
+                if (hospitalpolicies.Count > 0)
+                {
+                    foreach (Hospitalpolicy hospitalpolicy in hospitalpolicies)
+                    {
+                        hospitalpolicy.PolicyMaker = null;
+                    }
+                    policymaker.Hospitalpolicy = hospitalpolicies;
                 }
 
                 return Ok(policymaker);
@@ -106,6 +129,15 @@ namespace case_management_reports.Controllers
 
                 _context.Policymaker.Add(policymaker);
                 await _context.SaveChangesAsync();
+                List<Hospitalpolicy> hospitalpolicies = _context.Hospitalpolicy.Where(h => h.PolicyMakerId == policymaker.PolicyMakerId).ToList();
+                if (hospitalpolicies.Count > 0)
+                {
+                    foreach (Hospitalpolicy hospitalpolicy in hospitalpolicies)
+                    {
+                        hospitalpolicy.PolicyMaker = null;
+                    }
+                    policymaker.Hospitalpolicy = hospitalpolicies;
+                }
                 return Ok(policymaker);
             }
             catch (Exception e)
@@ -136,20 +168,17 @@ namespace case_management_reports.Controllers
                     return StatusCode(500, response);
                 }
 
-                /*var policymaker_db = await _context.Policymaker.FindAsync(id);
-
-                if (policymaker_db == null)
-                {
-                    Response response = new()
-                    {
-                        statuscode = 404,
-                        message = "policy maker not updated. Some data missing"
-                    };
-                    return StatusCode(404, response);
-                }*/
-
                 _context.Policymaker.Update(policymaker);
                 await _context.SaveChangesAsync();
+                List<Hospitalpolicy> hospitalpolicies = _context.Hospitalpolicy.Where(h => h.PolicyMakerId == policymaker.PolicyMakerId).ToList();
+                if (hospitalpolicies.Count > 0)
+                {
+                    foreach (Hospitalpolicy hospitalpolicy in hospitalpolicies)
+                    {
+                        hospitalpolicy.PolicyMaker = null;
+                    }
+                    policymaker.Hospitalpolicy = hospitalpolicies;
+                }
                 return Ok(policymaker);
             }
             catch (Exception e)
@@ -181,7 +210,7 @@ namespace case_management_reports.Controllers
                     return StatusCode(500, response);
                 }
 
-                var policymaker_db = await _context.Policymaker.FindAsync(id);
+                var policymaker_db =  _context.Policymaker.FirstOrDefault(p => p.PolicyMakerId == id);
 
                 if (policymaker_db == null)
                 {

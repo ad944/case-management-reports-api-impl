@@ -64,7 +64,7 @@ namespace case_management_reports.Controllers
                     return StatusCode(500, response);
                 }
 
-                var communityresourcegroup = await _context.Communityresourcegroup.FindAsync(id);
+                var communityresourcegroup = _context.Communityresourcegroup.FirstOrDefault(c => c.GroupId == id);
 
                 if (communityresourcegroup == null)
                 {
@@ -185,7 +185,7 @@ namespace case_management_reports.Controllers
                     return StatusCode(500, response);
                 }
 
-                var communityresourcegroup_db = await _context.Communityresourcegroup.FindAsync(id);
+                var communityresourcegroup_db = _context.Communityresourcegroup.FirstOrDefault(c => c.GroupId == id);
 
                 if (communityresourcegroup_db == null)
                 {

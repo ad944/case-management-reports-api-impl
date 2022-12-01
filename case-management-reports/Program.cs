@@ -1,5 +1,6 @@
 using CaseManagementReports.Data;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -15,6 +16,7 @@ builder.Services.AddDbContext<heroku_00644680628e06dContext>(
           options.UseMySql(builder.Configuration.GetConnectionString("CaseManagementReportsHerokuDB"),
                 Microsoft.EntityFrameworkCore.ServerVersion.Parse("8.0.23-mysql"));
 });
+
 
 var app = builder.Build();
 
